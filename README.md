@@ -1,6 +1,6 @@
-# docker-containerd
+# mbentley/containerd
 
-1. Start engine
+1. Start containerd
 
     ```
     docker run -d \
@@ -17,8 +17,17 @@
       mbentley/containerd
     ```
 
-1. Communicate with that engine
+1. Pull and run a container
 
     ```
-    docker -H tcp://localhost:1000 info
+    docker exec -it containerd bash
+    ctr i pull docker.io/library/alpine:latest
+    ctr run -t docker.io/library/alpine:latest alpine sh
+    ```
+
+1. Clean up from the container and remove the image
+
+    ```
+    ctr c rm alpine
+    ctr i rm docker.io/library/alpine:latest
     ```
