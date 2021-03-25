@@ -29,6 +29,35 @@ RUN apt-get update &&\
   apt-get autoremove -y &&\
   rm -rf "cni-plugins-linux-amd64-${PLUGINS_VER}.tgz" cni-isolation-amd64.tgz /var/lib/apt/lists/*
 
+# install nerdctl
+RUN apt-get update &&\
+  apt-get install -y jq &&\
+  NERDCTL_VER="$(curl -s https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r .name)" &&\
+  NERDCTL_SHORT_VER="$(echo "${NERDCTL_VER}" | awk -F 'v' '{print $2}')" &&\
+  mkdir /tmp/nerdctl &&\
+  cd /tmp/nerdctl &&\
+  curl -sL "https://github.com/containerd/nerdctl/releases/download/${NERDCTL_VER}/nerdctl-${NERDCTL_SHORT_VER}-linux-amd64.tar.gz" -o "nerdctl-${NERDCTL_SHORT_VER}-linux-amd64.tar.gz" &&\
+  tar xvf "nerdctl-${NERDCTL_SHORT_VER}-linux-amd64.tar.gz" &&\
+  mv nerdctl /usr/local/bin &&\
+  cd &&\
+  apt-get purge -y jq &&\
+  apt-get autoremove -y &&\
+  rm -rf /tmp/nerdctl /var/lib/apt/lists/*
+
+# install buildkit
+RUN apt-get update &&\
+  apt-get install -y git jq &&\
+  BUILDKIT_VER="$(curl -s https://api.github.com/repos/moby/buildkit/releases/latest | jq -r .name)" &&\
+  mkdir /tmp/buildkit &&\
+  cd /tmp/buildkit &&\
+  curl -sL "https://github.com/moby/buildkit/releases/download/${BUILDKIT_VER}/buildkit-${BUILDKIT_VER}.linux-amd64.tar.gz" -o "buildkit-${BUILDKIT_VER}.linux-amd64.tar.gz" &&\
+  tar xvf "buildkit-${BUILDKIT_VER}.linux-amd64.tar.gz" &&\
+  mv bin/* /usr/local/bin &&\
+  cd &&\
+  apt-get purge -y jq &&\
+  apt-get autoremove -y &&\
+  rm -rf /tmp/buildkit /var/lib/apt/lists/*
+
 COPY entrypoint.sh /entrypoint.sh
 
 VOLUME ["/var/lib/containerd"]

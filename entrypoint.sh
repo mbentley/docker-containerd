@@ -10,4 +10,10 @@ then
   done
 fi
 
+# launch buildkit if it is found and has not been disabled
+if [ -f "/usr/local/bin/buildkitd" ] && [ "${BUILDKITD_ENABLED}" = "true" ]
+then
+  /usr/local/bin/buildkitd &
+fi
+
 exec "${@}"
