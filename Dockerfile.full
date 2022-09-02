@@ -1,14 +1,14 @@
 # rebased/repackaged base image that only updates existing packages
-FROM mbentley/ubuntu:18.04
+FROM mbentley/ubuntu:20.04
 LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install containerd packaged by Docker, Inc.
 RUN apt-get update &&\
-  apt-get install -y apt-transport-https ca-certificates curl gnupg iproute2 iptables module-init-tools net-tools socat &&\
+  apt-get install -y apt-transport-https ca-certificates curl gnupg iproute2 iptables kmod net-tools socat &&\
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &&\
-  echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list &&\
+  echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" > /etc/apt/sources.list.d/docker.list &&\
   apt-get update &&\
   apt-get install -y containerd.io &&\
   rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/docker.list
