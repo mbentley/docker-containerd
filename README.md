@@ -1,5 +1,7 @@
 # mbentley/containerd
 
+Note: this is no longer maintained simply because I don't use it so I'll just archive it.
+
 ## containerd + ctr
 
 1. Start containerd
